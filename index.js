@@ -24,6 +24,22 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const newTaskCollection = client.db("taskDB").collection("addTask");
+
+    app.get("/addTask", async (req, res) => {
+      const result = await newTaskCollection.find().toArray();
+      res.send(result);
+      
+    })
+
+    app.post("/addTask", async (req, res) => {
+      const newTask = req.body;
+      console.log(newTask);
+      const result = await newTaskCollection.insertOne(newTask);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
